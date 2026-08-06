@@ -1,12 +1,14 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
+export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+
   const supabase = createClient()
   const { data: category } = await supabase
     .from('categories')
     .select('*')
-    .eq('slug', params.slug)
+    .eq('slug', slug)
     .single()
 
   if (!category) return <div className="container-custom py-8">Категория не найдена</div>
