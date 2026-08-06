@@ -2,10 +2,9 @@ import { createClient } from '@/utils/supabase/server'
 
 export default async function VerifiedProfiles() {
   const supabase = createClient()
-  // Получаем профили с самым высоким trust_score и is_verified = true
   const { data: profiles } = await supabase
     .from('profiles')
-    .select('*, listings(count)')
+    .select('*')
     .eq('is_verified', true)
     .order('trust_score', { ascending: false })
     .limit(4)
