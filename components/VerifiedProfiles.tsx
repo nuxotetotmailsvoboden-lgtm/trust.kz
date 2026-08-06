@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 
 export default async function VerifiedProfiles() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: profiles } = await supabase
     .from('profiles')
     .select('*')
