@@ -11,7 +11,6 @@ export default async function ListingPage({ params }: { params: { id: string } }
 
   if (!listing) notFound()
 
-  // Получаем отзывы
   const { data: reviews } = await supabase
     .from('reviews')
     .select('*, profiles(full_name)')
@@ -27,7 +26,7 @@ export default async function ListingPage({ params }: { params: { id: string } }
             <span className="text-2xl font-bold text-trust-orange">{listing.price} ₸</span>
             <span className="text-sm bg-gray-100 px-3 py-1 rounded">{listing.city}</span>
           </div>
-          <p className="mt-4">{listing.description}</p>
+          <p className="mt-4 whitespace-pre-wrap">{listing.description}</p>
           {listing.images?.length > 0 && (
             <div className="flex gap-2 mt-4">
               {listing.images.map((img: string, idx: number) => (
@@ -37,18 +36,19 @@ export default async function ListingPage({ params }: { params: { id: string } }
           )}
         </div>
 
-        <div className="bg-gray-50 p-6 rounded-2xl">
+        <div className="bg-gray-50 p-6 rounded-2xl h-fit">
           <h3 className="font-bold">Продавец</h3>
-          <p className="text-xl">{listing.profiles?.full_name}</p>
+          <p className="text-xl">{listing.profiles?.full_name || 'Пользователь'}</p>
           <div className="flex items-center gap-2 mt-1">
             {listing.profiles?.is_verified && <span className="text-green-600">✅ VERIFIED</span>}
-            <span className="text-trust-orange">TRUST SCORE: {listing.profiles?.trust_score}</span>
+            <span className="text-trust-orange">TRUST SCORE: {listing.profiles?.trust_score || 0}</span>
           </div>
           <p className="mt-2">📞 {listing.profiles?.phone || 'Не указан'}</p>
           <a
             href={`https://wa.me/7${listing.profiles?.phone}`}
             target="_blank"
-            className="block mt-4 text-center bg-green-500 text-white py-2 rounded-lg"
+            rel="noopener noreferrer"
+            className="block mt-4 text-center bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition"
           >
             Написать в WhatsApp
           </a>
@@ -66,6 +66,7 @@ export default async function ListingPage({ params }: { params: { id: string } }
             <p className="text-gray-600">{r.comment}</p>
           </div>
         ))}
+        {!reviews?.length && <p className="text-gray-400 mt-2">Пока нет отзывов.</p>}
       </div>
     </div>
   )
