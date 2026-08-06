@@ -1,12 +1,14 @@
 import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
 
-export default async function ListingPage({ params }: { params: { id: string } }) {
+export default async function ListingPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
   const supabase = createClient()
   const { data: listing } = await supabase
     .from('listings')
     .select('*, profiles(full_name, phone, trust_score, is_verified)')
-    .eq('id', parseInt(params.id))
+    .eq('id', parseInt(id))
     .single()
 
   if (!listing) notFound()
