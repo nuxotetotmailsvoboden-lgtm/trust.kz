@@ -3,8 +3,7 @@ import Link from 'next/link'
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: category } = await supabase
     .from('categories')
     .select('*')
