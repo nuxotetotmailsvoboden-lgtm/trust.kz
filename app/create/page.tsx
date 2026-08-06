@@ -17,11 +17,11 @@ export default function CreateListing() {
 
   useEffect(() => {
     async function fetchCategories() {
-      const { data } = await supabase.from('categories').select('*')
+      const { data } = await supabase.from('categories').select('*').order('name')
       if (data) setCategories(data)
     }
     fetchCategories()
-  }, [])
+  }, [supabase])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,7 +41,7 @@ export default function CreateListing() {
       city,
       category_id: parseInt(categoryId),
       user_id: session.user.id,
-      extra: {}, // можно добавить поля для разных категорий
+      extra: {},
     })
 
     setLoading(false)
