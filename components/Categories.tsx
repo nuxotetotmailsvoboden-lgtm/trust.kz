@@ -1,29 +1,26 @@
-const categories = [
-  { name: 'Услуги', desc: 'От строительства до юриста', icon: '🔧' },
-  { name: 'Маркет', desc: 'Мебель, техника, товары', icon: '🛍️' },
-  { name: 'Реклама', desc: 'Instagram, Telegram, TikTok, YouTube', icon: '📱' },
-  { name: 'Автомобили', desc: 'Продажа авто от владельцев', icon: '🚗' },
-  { name: 'Недвижимость', desc: 'Продажа и аренда без посредников', icon: '🏠' },
-  { name: 'Обучение', desc: 'Курсы, школы, репетиторы', icon: '📚' },
-  { name: 'Работа', desc: 'Вакансии и поиск сотрудников', icon: '💼' },
-  { name: 'Компании', desc: 'Проверенные организации', icon: '🏢' },
-];
+import { createClient } from '@/utils/supabase/server'
 
-export default function Categories() {
+export default async function Categories() {
+  const supabase = createClient()
+  const { data: categories } = await supabase
+    .from('categories')
+    .select('*')
+    .order('name')
+
   return (
     <section className="py-16">
       <div className="container-custom">
         <h2 className="mb-8 text-2xl font-bold md:text-3xl">Популярные категории</h2>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {categories.map((cat) => (
+          {categories?.map((cat) => (
             <a
-              key={cat.name}
-              href="#"
+              key={cat.id}
+              href={`/categories/${cat.slug}`}
               className="group rounded-2xl border border-gray-200 p-5 transition hover:border-trust-orange hover:shadow-md"
             >
-              <div className="text-3xl">{cat.icon}</div>
+              <div className="text-3xl">{cat.icon || '📌'}</div>
               <h3 className="mt-2 font-semibold">{cat.name}</h3>
-              <p className="text-sm text-gray-500">{cat.desc}</p>
+              <p className="text-sm text-gray-500">{cat.description}</p>
             </a>
           ))}
         </div>
@@ -37,5 +34,5 @@ export default function Categories() {
         </div>
       </div>
     </section>
-  );
+  )
 }
