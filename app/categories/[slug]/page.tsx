@@ -9,7 +9,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     .eq('slug', params.slug)
     .single()
 
-  if (!category) return <div>Категория не найдена</div>
+  if (!category) return <div className="container-custom py-8">Категория не найдена</div>
 
   const { data: listings } = await supabase
     .from('listings')
@@ -36,6 +36,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
             </div>
           </Link>
         ))}
+        {!listings?.length && <p className="text-gray-400">В этой категории пока нет объявлений.</p>}
       </div>
     </div>
   )
