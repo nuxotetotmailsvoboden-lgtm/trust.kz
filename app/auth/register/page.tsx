@@ -9,6 +9,7 @@ export default function Register() {
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
@@ -22,7 +23,19 @@ export default function Register() {
       }
     })
     if (error) setError(error.message)
-    else router.push('/auth/login?message=Проверьте почту для подтверждения')
+    else setSuccess(true)
+  }
+
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="bg-white p-8 rounded-2xl shadow-md text-center">
+          <h2 className="text-2xl font-bold text-green-600">✅ Проверьте почту</h2>
+          <p className="mt-2">Мы отправили ссылку для подтверждения на {email}</p>
+          <a href="/auth/login" className="mt-4 inline-block text-trust-orange">Войти</a>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -48,11 +61,12 @@ export default function Register() {
         />
         <input
           type="password"
-          placeholder="Пароль"
+          placeholder="Пароль (минимум 6 символов)"
           value={password}
           onChange={e => setPassword(e.target.value)}
           className="w-full border rounded-lg px-4 py-2 mt-4"
           required
+          minLength={6}
         />
         <button type="submit" className="w-full bg-trust-orange text-white py-2 rounded-lg mt-6 hover:bg-orange-600">
           Зарегистрироваться
